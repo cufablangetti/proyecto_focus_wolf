@@ -1073,6 +1073,15 @@ ul { list-style: none; }
     border-radius: var(--border-radius);
     color: var(--gray-light);
     font-size: 0.95rem;
+    text-decoration: none;
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.map-address:hover {
+    border-color: rgba(255, 215, 0, 0.4);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-yellow);
 }
 
 .map-address i {
