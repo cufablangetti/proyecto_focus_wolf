@@ -16,14 +16,36 @@ document.addEventListener('DOMContentLoaded', () => {
     document.body.style.overflow = 'hidden';
 
     if (isMobile && introVideo) {
-        // === MOBILE: Show video intro, hide preloader ===
+        // === MOBILE: Show tap-to-start, then play video WITH sound ===
         preloader.classList.add('hidden');
+        videoIntro.style.display = 'none';
 
-        introVideo.play().catch(() => {
-            // Autoplay blocked: skip video, show page
-            videoIntro.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            initHeroAnimations();
+        // Create tap-to-start overlay
+        const tapOverlay = document.createElement('div');
+        tapOverlay.id = 'tapOverlay';
+        tapOverlay.innerHTML = `
+            <div class="tap-content">
+                <div class="tap-circle">
+                    <i class="fas fa-play"></i>
+                </div>
+                <p class="tap-text">Toc\u00e1 para iniciar</p>
+            </div>
+        `;
+        document.body.appendChild(tapOverlay);
+
+        tapOverlay.addEventListener('click', () => {
+            // Fade out tap overlay
+            tapOverlay.style.opacity = '0';
+            setTimeout(() => tapOverlay.remove(), 500);
+
+            // Show and play video WITH sound
+            videoIntro.style.display = 'flex';
+            introVideo.muted = false;
+            introVideo.play().catch(() => {
+                videoIntro.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                initHeroAnimations();
+            });
         });
 
         introVideo.addEventListener('ended', () => {
@@ -34,10 +56,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Fallback: hide video after 30 seconds max
         setTimeout(() => {
-            if (!videoIntro.classList.contains('hidden')) {
+            if (videoIntro && !videoIntro.classList.contains('hidden')) {
                 videoIntro.classList.add('hidden');
                 document.body.style.overflow = 'auto';
                 initHeroAnimations();
+            }
+            if (tapOverlay && tapOverlay.parentNode) {
+                tapOverlay.remove();
             }
         }, 30000);
 
