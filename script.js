@@ -15,38 +15,35 @@ document.addEventListener('DOMContentLoaded', () => {
     // Prevent scroll during intro
     document.body.style.overflow = 'hidden';
 
-    if (isMobile && videoIntro && introVideo) {
-        // === MOBILE: Video intro ===
-        // Hide desktop preloader
-        if (preloader) preloader.classList.add('hidden');
+    if (isMobile && introVideo) {
+        // === MOBILE: Show video intro, hide preloader ===
+        preloader.classList.add('hidden');
 
-        // When video ends, hide intro and show page
+        introVideo.play().catch(() => {
+            // Autoplay blocked: skip video, show page
+            videoIntro.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            initHeroAnimations();
+        });
+
         introVideo.addEventListener('ended', () => {
             videoIntro.classList.add('hidden');
             document.body.style.overflow = 'auto';
             initHeroAnimations();
         });
 
-        // Fallback: if video fails or takes too long, hide after 15s
+        // Fallback: hide video after 30 seconds max
         setTimeout(() => {
             if (!videoIntro.classList.contains('hidden')) {
                 videoIntro.classList.add('hidden');
                 document.body.style.overflow = 'auto';
                 initHeroAnimations();
             }
-        }, 15000);
-
-        // Also handle video error
-        introVideo.addEventListener('error', () => {
-            videoIntro.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            initHeroAnimations();
-        });
+        }, 30000);
 
     } else {
-        // === DESKTOP: Original preloader ===
-        // Hide video intro on desktop
-        if (videoIntro) videoIntro.style.display = 'none';
+        // === DESKTOP: Show classic preloader ===
+        if (videoIntro) videoIntro.classList.add('hidden');
 
         // Loading bar progress
         let progress = 0;
