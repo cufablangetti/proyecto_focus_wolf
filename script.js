@@ -5,57 +5,48 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ==================== PRELOADER & VIDEO INTRO ====================
+    // ==================== PRELOADER / VIDEO INTRO ====================
     const preloader = document.getElementById('preloader');
     const loadingBarFill = document.getElementById('loadingBarFill');
     const videoIntro = document.getElementById('videoIntro');
     const introVideo = document.getElementById('introVideo');
-    const videoSkipBtn = document.getElementById('videoSkipBtn');
     const isMobile = window.innerWidth <= 768;
 
+    // Prevent scroll during intro
     document.body.style.overflow = 'hidden';
 
-    function hideVideoIntro() {
-        if (videoIntro && !videoIntro.classList.contains('hidden')) {
-            videoIntro.classList.add('hidden');
-            if (introVideo) {
-                introVideo.pause();
-                introVideo.currentTime = 0;
-            }
-        }
-    }
-
     if (isMobile && videoIntro && introVideo) {
-        // ===== MOBILE: Show video intro, skip preloader =====
+        // === MOBILE: Video intro ===
+        // Hide desktop preloader
         if (preloader) preloader.classList.add('hidden');
 
-        // Try autoplay with sound
-        introVideo.muted = false;
-        introVideo.play().catch(() => {
-            // Autoplay with sound blocked by browser, try muted
-            introVideo.muted = true;
-            introVideo.play().then(() => {
-                setTimeout(() => { introVideo.muted = false; }, 100);
-            });
-        });
-
-        // Skip button
-        videoSkipBtn.addEventListener('click', () => {
-            hideVideoIntro();
+        // When video ends, hide intro and show page
+        introVideo.addEventListener('ended', () => {
+            videoIntro.classList.add('hidden');
             document.body.style.overflow = 'auto';
             initHeroAnimations();
         });
 
-        // When video ends naturally
-        introVideo.addEventListener('ended', () => {
-            hideVideoIntro();
+        // Fallback: if video fails or takes too long, hide after 15s
+        setTimeout(() => {
+            if (!videoIntro.classList.contains('hidden')) {
+                videoIntro.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                initHeroAnimations();
+            }
+        }, 15000);
+
+        // Also handle video error
+        introVideo.addEventListener('error', () => {
+            videoIntro.classList.add('hidden');
             document.body.style.overflow = 'auto';
             initHeroAnimations();
         });
 
     } else {
-        // ===== DESKTOP: Normal preloader, hide video =====
-        if (videoIntro) videoIntro.classList.add('hidden');
+        // === DESKTOP: Original preloader ===
+        // Hide video intro on desktop
+        if (videoIntro) videoIntro.style.display = 'none';
 
         // Loading bar progress
         let progress = 0;
