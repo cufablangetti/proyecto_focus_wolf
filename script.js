@@ -29,13 +29,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Intentar autoplay con sonido
         introVideo.muted = false;
+        introVideo.volume = 1.0;
         const playPromise = introVideo.play();
 
         if (playPromise !== undefined) {
             playPromise.catch(() => {
-                // Si el navegador bloquea con sonido, reproducir muteado
+                // Navegador bloquea sonido: reproducir muteado primero
                 introVideo.muted = true;
                 introVideo.play();
+
+                // Al tocar la pantalla, activar sonido
+                const enableSound = () => {
+                    introVideo.muted = false;
+                    introVideo.volume = 1.0;
+                    document.removeEventListener('touchstart', enableSound);
+                    document.removeEventListener('click', enableSound);
+                };
+                document.addEventListener('touchstart', enableSound, { once: true });
+                document.addEventListener('click', enableSound, { once: true });
             });
         }
 

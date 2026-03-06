@@ -173,13 +173,13 @@ ul { list-style: none; }
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    background: #000;
 }
 
 .video-intro-wrapper video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 /* --- DESKTOP LOGO PRELOADER --- */
