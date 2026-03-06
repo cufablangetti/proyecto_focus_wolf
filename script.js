@@ -5,54 +5,59 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // ==================== PRELOADER ====================
+    // ==================== PRELOADER & VIDEO INTRO ====================
     const preloader = document.getElementById('preloader');
     const loadingBarFill = document.getElementById('loadingBarFill');
+    const videoIntro = document.getElementById('videoIntro');
+    const introVideo = document.getElementById('introVideo');
+    const videoSkipBtn = document.getElementById('videoSkipBtn');
     const isMobile = window.innerWidth <= 768;
 
-    if (isMobile) {
-        // --- MOBILE: Video intro ---
-        const preloaderVideo = document.getElementById('preloaderVideo');
-        const videoSkipBtn = document.getElementById('videoSkipBtn');
+    document.body.style.overflow = 'hidden';
 
-        function dismissPreloader() {
-            preloader.classList.add('hidden');
+    function hideVideoIntro() {
+        if (videoIntro && !videoIntro.classList.contains('hidden')) {
+            videoIntro.classList.add('hidden');
+            if (introVideo) {
+                introVideo.pause();
+                introVideo.currentTime = 0;
+            }
+        }
+    }
+
+    if (isMobile && videoIntro && introVideo) {
+        // ===== MOBILE: Show video intro, skip preloader =====
+        if (preloader) preloader.classList.add('hidden');
+
+        // Try autoplay with sound
+        introVideo.muted = false;
+        introVideo.play().catch(() => {
+            // Autoplay with sound blocked by browser, try muted
+            introVideo.muted = true;
+            introVideo.play().then(() => {
+                setTimeout(() => { introVideo.muted = false; }, 100);
+            });
+        });
+
+        // Skip button
+        videoSkipBtn.addEventListener('click', () => {
+            hideVideoIntro();
             document.body.style.overflow = 'auto';
             initHeroAnimations();
-            if (preloaderVideo) {
-                preloaderVideo.pause();
-                preloaderVideo.currentTime = 0;
-            }
-        }
+        });
 
-        if (preloaderVideo) {
-            // Intentar reproducir con sonido
-            preloaderVideo.muted = false;
-            const playPromise = preloaderVideo.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Si el navegador bloquea autoplay con sonido, intentar muteado
-                    preloaderVideo.muted = true;
-                    preloaderVideo.play().catch(() => {});
-                });
-            }
-
-            preloaderVideo.addEventListener('ended', dismissPreloader);
-        }
-
-        if (videoSkipBtn) {
-            videoSkipBtn.addEventListener('click', dismissPreloader);
-        }
-
-        // Fallback: si el video no carga o tarda más de 30s
-        setTimeout(() => {
-            if (!preloader.classList.contains('hidden')) {
-                dismissPreloader();
-            }
-        }, 30000);
+        // When video ends naturally
+        introVideo.addEventListener('ended', () => {
+            hideVideoIntro();
+            document.body.style.overflow = 'auto';
+            initHeroAnimations();
+        });
 
     } else {
-        // --- DESKTOP: Preloader clásico ---
+        // ===== DESKTOP: Normal preloader, hide video =====
+        if (videoIntro) videoIntro.classList.add('hidden');
+
+        // Loading bar progress
         let progress = 0;
         const progressInterval = setInterval(() => {
             progress += Math.random() * 10 + 3;
@@ -61,12 +66,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (progress >= 100) clearInterval(progressInterval);
         }, 120);
 
+        // Preloader fades out after logo animation
         setTimeout(() => {
             preloader.classList.add('hidden');
             document.body.style.overflow = 'auto';
             initHeroAnimations();
         }, 3000);
 
+        // Fallback: hide preloader after 4 seconds max
         setTimeout(() => {
             if (!preloader.classList.contains('hidden')) {
                 preloader.classList.add('hidden');
@@ -75,9 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }, 4000);
     }
-
-    // Prevent scroll during preloader
-    document.body.style.overflow = 'hidden';
 
     // ==================== AOS INIT ====================
     AOS.init({

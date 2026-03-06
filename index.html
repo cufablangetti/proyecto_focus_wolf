@@ -25,19 +25,19 @@
 </head>
 <body>
 
+    <!-- ==================== VIDEO INTRO (MOBILE ONLY) ==================== -->
+    <div id="videoIntro" class="video-intro">
+        <video id="introVideo" playsinline preload="auto">
+            <source src="WhatsApp Video 2026-03-06 at 12.02.19.mp4" type="video/mp4">
+        </video>
+        <button id="videoSkipBtn" class="video-skip-btn">
+            <i class="fas fa-forward"></i> Saltar
+        </button>
+    </div>
+
     <!-- ==================== PRELOADER / INTRO ==================== -->
     <div id="preloader">
-        <!-- Video intro solo para móviles -->
-        <div class="preloader-video-wrapper" id="preloaderVideoWrapper">
-            <video id="preloaderVideo" playsinline preload="auto">
-                <source src="WhatsApp%20Video%202026-03-06%20at%2012.00.00.mp4" type="video/mp4">
-            </video>
-            <button class="video-skip-btn" id="videoSkipBtn">
-                <i class="fas fa-forward"></i> Saltar
-            </button>
-        </div>
-        <!-- Preloader clásico para desktop -->
-        <div class="preloader-inner" id="preloaderInner">
+        <div class="preloader-inner">
             <div class="logo-stage active" id="logoStage">
                 <div class="logo-reveal-circle" id="logoRevealCircle">
                     <img src="logo.png" alt="WOLF OIL Logo" class="preloader-logo" id="preloaderLogo">

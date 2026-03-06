@@ -133,28 +133,33 @@ ul { list-style: none; }
     justify-content: center;
 }
 
-/* ==================== PRELOADER ==================== */
-
-/* --- Video intro (solo móviles) --- */
-.preloader-video-wrapper {
+/* ==================== VIDEO INTRO (MOBILE ONLY) ==================== */
+.video-intro {
     display: none;
 }
 
 @media (max-width: 768px) {
-    .preloader-video-wrapper {
+    .video-intro {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        z-index: 999999;
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 2;
-        background: var(--black);
+        transition: opacity 0.6s ease, visibility 0.6s ease;
     }
 
-    .preloader-video-wrapper video {
+    .video-intro.hidden {
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .video-intro video {
         width: 100%;
         height: 100%;
         object-fit: cover;
@@ -162,19 +167,20 @@ ul { list-style: none; }
 
     .video-skip-btn {
         position: absolute;
-        bottom: 30px;
+        bottom: 40px;
         right: 20px;
         background: rgba(255, 204, 0, 0.9);
-        color: var(--black);
+        color: #111;
         border: none;
-        padding: 10px 22px;
-        border-radius: 25px;
+        padding: 12px 28px;
+        border-radius: 30px;
         font-family: var(--font-heading);
-        font-size: 0.9rem;
+        font-size: 1rem;
         font-weight: 600;
         letter-spacing: 1px;
+        text-transform: uppercase;
         cursor: pointer;
-        z-index: 3;
+        z-index: 1000000;
         transition: all 0.3s ease;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
@@ -184,12 +190,12 @@ ul { list-style: none; }
         background: var(--yellow);
     }
 
-    /* Ocultar preloader clásico en móvil */
-    #preloaderInner {
-        display: none !important;
+    .video-skip-btn i {
+        margin-right: 6px;
     }
 }
 
+/* ==================== PRELOADER ==================== */
 #preloader {
     position: fixed;
     top: 0;
