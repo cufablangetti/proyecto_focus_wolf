@@ -6,77 +6,75 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== PRELOADER ====================
-    const isMobile = window.innerWidth <= 768;
     const preloader = document.getElementById('preloader');
-    const preloaderMobile = document.getElementById('preloaderMobile');
-    const introVideo = document.getElementById('introVideo');
     const loadingBarFill = document.getElementById('loadingBarFill');
+    const isMobile = window.innerWidth <= 768;
 
-    function hidePreloader() {
-        if (preloader && !preloader.classList.contains('hidden')) {
+    if (isMobile) {
+        // --- MOBILE: Video intro ---
+        const preloaderVideo = document.getElementById('preloaderVideo');
+        const videoSkipBtn = document.getElementById('videoSkipBtn');
+
+        function dismissPreloader() {
             preloader.classList.add('hidden');
-        }
-        if (preloaderMobile && !preloaderMobile.classList.contains('hidden')) {
-            preloaderMobile.classList.add('hidden');
-        }
-        document.body.style.overflow = 'auto';
-        initHeroAnimations();
-    }
-
-    if (isMobile && introVideo) {
-        // === MOBILE: Video intro automático con sonido ===
-        document.body.style.overflow = 'hidden';
-
-        // Intentar autoplay con sonido
-        introVideo.muted = false;
-        introVideo.volume = 1.0;
-        const playPromise = introVideo.play();
-
-        if (playPromise !== undefined) {
-            playPromise.catch(() => {
-                // Navegador bloquea sonido: reproducir muteado
-                introVideo.muted = true;
-                introVideo.play();
-            });
+            document.body.style.overflow = 'auto';
+            initHeroAnimations();
+            if (preloaderVideo) {
+                preloaderVideo.pause();
+                preloaderVideo.currentTime = 0;
+            }
         }
 
-        // Cuando termina el video, ocultar preloader
-        introVideo.addEventListener('ended', () => {
-            hidePreloader();
-        });
+        if (preloaderVideo) {
+            // Intentar reproducir con sonido
+            preloaderVideo.muted = false;
+            const playPromise = preloaderVideo.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    // Si el navegador bloquea autoplay con sonido, intentar muteado
+                    preloaderVideo.muted = true;
+                    preloaderVideo.play().catch(() => {});
+                });
+            }
 
-        // Fallback: si el video tarda mucho, ocultar después de 30s
+            preloaderVideo.addEventListener('ended', dismissPreloader);
+        }
+
+        if (videoSkipBtn) {
+            videoSkipBtn.addEventListener('click', dismissPreloader);
+        }
+
+        // Fallback: si el video no carga o tarda más de 30s
         setTimeout(() => {
-            hidePreloader();
+            if (!preloader.classList.contains('hidden')) {
+                dismissPreloader();
+            }
         }, 30000);
 
     } else {
-        // === DESKTOP: Original logo preloader ===
-        if (preloaderMobile) {
-            preloaderMobile.style.display = 'none';
-        }
-        document.body.style.overflow = 'hidden';
+        // --- DESKTOP: Preloader clásico ---
+        let progress = 0;
+        const progressInterval = setInterval(() => {
+            progress += Math.random() * 10 + 3;
+            if (progress > 100) progress = 100;
+            if (loadingBarFill) loadingBarFill.style.width = progress + '%';
+            if (progress >= 100) clearInterval(progressInterval);
+        }, 120);
 
-    // Loading bar progress
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-        progress += Math.random() * 10 + 3;
-        if (progress > 100) progress = 100;
-        if (loadingBarFill) loadingBarFill.style.width = progress + '%';
-        if (progress >= 100) clearInterval(progressInterval);
-    }, 120);
+        setTimeout(() => {
+            preloader.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            initHeroAnimations();
+        }, 3000);
 
-    // Preloader fades out after logo animation
-    setTimeout(() => {
-        hidePreloader();
-    }, 3000);
-
-    // Fallback: hide preloader after 4 seconds max
-    setTimeout(() => {
-        hidePreloader();
-    }, 4000);
-
-    } // end desktop preloader
+        setTimeout(() => {
+            if (!preloader.classList.contains('hidden')) {
+                preloader.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+                initHeroAnimations();
+            }
+        }, 4000);
+    }
 
     // Prevent scroll during preloader
     document.body.style.overflow = 'hidden';

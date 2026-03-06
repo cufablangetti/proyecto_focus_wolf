@@ -26,18 +26,18 @@
 <body>
 
     <!-- ==================== PRELOADER / INTRO ==================== -->
-    <!-- Mobile: Video intro -->
-    <div id="preloaderMobile" class="preloader-mobile">
-        <div class="video-intro-wrapper">
-            <video id="introVideo" autoplay playsinline webkit-playsinline preload="auto">
-                <source src="presentacion.mp4" type="video/mp4">
+    <div id="preloader">
+        <!-- Video intro solo para móviles -->
+        <div class="preloader-video-wrapper" id="preloaderVideoWrapper">
+            <video id="preloaderVideo" playsinline preload="auto">
+                <source src="WhatsApp%20Video%202026-03-06%20at%2012.00.00.mp4" type="video/mp4">
             </video>
+            <button class="video-skip-btn" id="videoSkipBtn">
+                <i class="fas fa-forward"></i> Saltar
+            </button>
         </div>
-    </div>
-
-    <!-- Desktop: Logo preloader -->
-    <div id="preloader" class="preloader-desktop">
-        <div class="preloader-inner">
+        <!-- Preloader clásico para desktop -->
+        <div class="preloader-inner" id="preloaderInner">
             <div class="logo-stage active" id="logoStage">
                 <div class="logo-reveal-circle" id="logoRevealCircle">
                     <img src="logo.png" alt="WOLF OIL Logo" class="preloader-logo" id="preloaderLogo">
