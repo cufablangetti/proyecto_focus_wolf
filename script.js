@@ -6,8 +6,55 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // ==================== PRELOADER ====================
+    const isMobile = window.innerWidth <= 768;
     const preloader = document.getElementById('preloader');
+    const preloaderMobile = document.getElementById('preloaderMobile');
+    const introVideo = document.getElementById('introVideo');
     const loadingBarFill = document.getElementById('loadingBarFill');
+
+    function hidePreloader() {
+        if (preloader && !preloader.classList.contains('hidden')) {
+            preloader.classList.add('hidden');
+        }
+        if (preloaderMobile && !preloaderMobile.classList.contains('hidden')) {
+            preloaderMobile.classList.add('hidden');
+        }
+        document.body.style.overflow = 'auto';
+        initHeroAnimations();
+    }
+
+    if (isMobile && introVideo) {
+        // === MOBILE: Video intro automático con sonido ===
+        document.body.style.overflow = 'hidden';
+
+        // Intentar autoplay con sonido
+        introVideo.muted = false;
+        const playPromise = introVideo.play();
+
+        if (playPromise !== undefined) {
+            playPromise.catch(() => {
+                // Si el navegador bloquea con sonido, reproducir muteado
+                introVideo.muted = true;
+                introVideo.play();
+            });
+        }
+
+        // Cuando termina el video, ocultar preloader
+        introVideo.addEventListener('ended', () => {
+            hidePreloader();
+        });
+
+        // Fallback: si el video tarda mucho, ocultar después de 30s
+        setTimeout(() => {
+            hidePreloader();
+        }, 30000);
+
+    } else {
+        // === DESKTOP: Original logo preloader ===
+        if (preloaderMobile) {
+            preloaderMobile.style.display = 'none';
+        }
+        document.body.style.overflow = 'hidden';
 
     // Loading bar progress
     let progress = 0;
@@ -20,19 +67,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Preloader fades out after logo animation
     setTimeout(() => {
-        preloader.classList.add('hidden');
-        document.body.style.overflow = 'auto';
-        initHeroAnimations();
+        hidePreloader();
     }, 3000);
 
     // Fallback: hide preloader after 4 seconds max
     setTimeout(() => {
-        if (!preloader.classList.contains('hidden')) {
-            preloader.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-            initHeroAnimations();
-        }
+        hidePreloader();
     }, 4000);
+
+    } // end desktop preloader
 
     // Prevent scroll during preloader
     document.body.style.overflow = 'hidden';
@@ -169,52 +212,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function initHeroAnimations() {
         // Register ScrollTrigger
         gsap.registerPlugin(ScrollTrigger);
-    }
-
-    // ==================== COUNTER ANIMATION ====================
-    function animateCounters() {
-        const counters = document.querySelectorAll('.stat-number');
-
-        counters.forEach(counter => {
-            const target = parseInt(counter.getAttribute('data-target'));
-            const duration = 2000;
-            const start = 0;
-            const startTime = performance.now();
-
-            function updateCounter(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / duration, 1);
-
-                // Easing function (ease-out)
-                const easeOut = 1 - Math.pow(1 - progress, 3);
-                const current = Math.floor(start + (target - start) * easeOut);
-
-                counter.textContent = current.toLocaleString();
-
-                if (progress < 1) {
-                    requestAnimationFrame(updateCounter);
-                } else {
-                    counter.textContent = target.toLocaleString();
-                }
-            }
-
-            requestAnimationFrame(updateCounter);
-        });
-    }
-
-    // Observer for counter animation
-    const statsSection = document.querySelector('.hero-stats');
-    if (statsSection) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    animateCounters();
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.5 });
-
-        observer.observe(statsSection);
     }
 
     // ==================== SWIPER / TESTIMONIALS ====================

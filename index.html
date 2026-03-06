@@ -26,7 +26,17 @@
 <body>
 
     <!-- ==================== PRELOADER / INTRO ==================== -->
-    <div id="preloader">
+    <!-- Mobile: Video intro -->
+    <div id="preloaderMobile" class="preloader-mobile">
+        <div class="video-intro-wrapper">
+            <video id="introVideo" autoplay playsinline webkit-playsinline preload="auto">
+                <source src="presentacion.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <!-- Desktop: Logo preloader -->
+    <div id="preloader" class="preloader-desktop">
         <div class="preloader-inner">
             <div class="logo-stage active" id="logoStage">
                 <div class="logo-reveal-circle" id="logoRevealCircle">
@@ -90,18 +100,18 @@
                     <i class="fas fa-phone-alt"></i> Contactanos
                 </a>
             </div>
-            <div class="hero-stats" data-aos="fade-up" data-aos-delay="1200">
-                <div class="stat-item">
-                    <span class="stat-number" data-target="5000">0</span>+
-                    <span class="stat-label">Clientes Satisfechos</span>
+            <div class="hero-slogans" data-aos="fade-up" data-aos-delay="1200">
+                <div class="slogan-item">
+                    <i class="fas fa-bolt slogan-icon"></i>
+                    <span class="slogan-text">Potencia que protege tu motor</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number" data-target="15">0</span>+
-                    <span class="stat-label">Años de Experiencia</span>
+                <div class="slogan-item">
+                    <i class="fas fa-shield-alt slogan-icon"></i>
+                    <span class="slogan-text">Tu auto en las mejores manos</span>
                 </div>
-                <div class="stat-item">
-                    <span class="stat-number" data-target="20">0</span>+
-                    <span class="stat-label">Servicios Disponibles</span>
+                <div class="slogan-item">
+                    <i class="fas fa-cog slogan-icon"></i>
+                    <span class="slogan-text">Instinto mecánico, precisión total</span>
                 </div>
             </div>
         </div>
@@ -176,8 +186,8 @@
                     <div class="about-image-frame">
                         <img src="logo.png" alt="WOLF OIL Equipo" class="about-img">
                         <div class="about-experience-badge">
-                            <span class="exp-number">15+</span>
-                            <span class="exp-text">Años de<br>Experiencia</span>
+                            <i class="fas fa-cog exp-icon"></i>
+                            <span class="exp-text">Calidad<br>Garantizada</span>
                         </div>
                     </div>
                 </div>
@@ -186,8 +196,8 @@
                     <h2 class="section-title">Sobre <span class="text-yellow">WOLF OIL</span></h2>
                     <p class="about-text">
                         En <strong>WOLF OIL</strong> somos un equipo apasionado por el cuidado automotor. 
-                        Con más de 15 años de experiencia, nos hemos consolidado como referentes en 
-                        lubricación y mecánica ligera.
+                        Nos hemos consolidado como referentes en lubricación y mecánica ligera, 
+                        brindando confianza y calidad en cada servicio.
                     </p>
                     <p class="about-text">
                         Nuestro compromiso es brindar un servicio de excelencia, utilizando productos 
