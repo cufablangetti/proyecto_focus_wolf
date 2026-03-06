@@ -34,19 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (playPromise !== undefined) {
             playPromise.catch(() => {
-                // Navegador bloquea sonido: reproducir muteado primero
+                // Navegador bloquea sonido: reproducir muteado
                 introVideo.muted = true;
                 introVideo.play();
-
-                // Al tocar la pantalla, activar sonido
-                const enableSound = () => {
-                    introVideo.muted = false;
-                    introVideo.volume = 1.0;
-                    document.removeEventListener('touchstart', enableSound);
-                    document.removeEventListener('click', enableSound);
-                };
-                document.addEventListener('touchstart', enableSound, { once: true });
-                document.addEventListener('click', enableSound, { once: true });
             });
         }
 
